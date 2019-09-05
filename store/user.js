@@ -6,14 +6,21 @@ export const state = () => ({
     },
 }) 
 
-export const mutations = () => ({
+export const mutations = {
 //保存用户信息到state
     setUserInfo(state,data){
-        state.userInfo = data
-    }
-})
+        state.userInfo = data;
+    },
 
-export const actions = () => ({
+    clearUserInfo(state){
+        state.userInfo = {
+            token:'',
+            user:{}
+        }
+    }
+}
+
+export const actions = {
     //登录
     login({commit},data){
         return this.$axios({
@@ -28,4 +35,4 @@ export const actions = () => ({
             return data
         })
     }
-})
+}

@@ -15,18 +15,39 @@
         <nuxt-link to="/air">国内机票</nuxt-link>
       </el-row>
       <!-- login -->
-      <div class="loginWord">
+      <div class="loginWord" v-if="!this.$store.state.user.userInfo.token">
         <nuxt-link to="/user/login">登录 / 注册</nuxt-link>
       </div>
-      <!-- <div v-else>{{ $store.state.user.userInfo.user.nickname }}</div> -->
+      <div v-else>
+        <el-dropdown>
+          <span class="el-dropdown-link">
+            <!-- 头像，昵称 -->
+            <img
+              :src="` ${$axios.defaults.baseURL}${$store.state.user.userInfo.user.defaultAvatar} `"
+            />
+            <span>{{$store.state.user.userInfo.user.nickname}}</span>
+          </span>
+          <el-dropdown-menu>
+            <el-dropdown-item>个人中心</el-dropdown-item>
+            <el-dropdown-item @click.native="handleLogout">退出</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </div>
     </el-row>
   </div>
 </template>
 
 <script>
 export default {
+  methods:{
+    handleLogout(){
+      //清除登录信息
+      this.$store.commit('user/clearUserInfo')
+      this.$message.success('退出成功')
+    }
+  },
   mounted() {
-    // console.log(this.$store.user.userInfo.token)
+    console.log(this.$store.state.user.userInfo.token);
   }
 };
 </script>
@@ -80,6 +101,19 @@ export default {
       &:hover {
         border-bottom: 1px solid #409eff;
       }
+    }
+  }
+
+  // 头像样式
+  .el-dropdown-link img {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    vertical-align: middle;
+    box-sizing: border-box;
+    border: 2px #fff solid;
+    &:hover {
+      border: 2px #409eff solid;
     }
   }
 }

@@ -54,8 +54,9 @@ export default {
             method: "POST",
             data: this.form
           }).then(res => {
-            console.log(res);
-
+            console.log(res.data);
+            this.$store.commit("user/setUserInfo", res.data);
+            this.$router.push('/')
           });
         }
       });
