@@ -3,7 +3,9 @@
     <el-row type="flex" class="main" justify="space-between">
       <!-- logo -->
       <div class="logo">
-        <img src="http://157.122.54.189:9093/images/logo.jpg" alt />
+        <nuxt-link to="/">
+          <img src="http://157.122.54.189:9093/images/logo.jpg" alt />
+        </nuxt-link>
       </div>
       <!-- navs -->
       <el-row type="flex" class="navs">
@@ -13,15 +15,20 @@
         <nuxt-link to="/air">国内机票</nuxt-link>
       </el-row>
       <!-- login -->
-      <div>
+      <div class="loginWord">
         <nuxt-link to="/user/login">登录 / 注册</nuxt-link>
       </div>
+      <!-- <div v-else>{{ $store.state.user.userInfo.user.nickname }}</div> -->
     </el-row>
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  mounted() {
+    // console.log(this.$store.user.userInfo.token)
+  }
+};
 </script>
 
 <style lang="less" scoped>
@@ -50,7 +57,7 @@ export default {};
         height: 60px;
         padding: 0 20px;
         box-sizing: border-box;
-        
+
         &:hover {
           color: #409eff;
           border-bottom: 5px #409eff solid;
@@ -63,6 +70,15 @@ export default {};
         &:hover {
           color: #fff;
         }
+      }
+    }
+  }
+  .loginWord {
+    font-size: 14px;
+    a {
+      color: #409eff;
+      &:hover {
+        border-bottom: 1px solid #409eff;
       }
     }
   }
