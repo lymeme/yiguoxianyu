@@ -25,6 +25,7 @@
 
 <script>
 import LoginForm from '@/components/user/loginForm.vue'
+import RegisterForm from '@/components/user/registerForm.vue'
 export default {
   data() {
     return {
@@ -32,7 +33,8 @@ export default {
     };
   },
   components:{
-    LoginForm
+    LoginForm,
+    RegisterForm
   },
   methods: {
     handleChangeTab(index) {
