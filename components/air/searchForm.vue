@@ -22,6 +22,7 @@
           placeholder="请搜索出发城市"
           @select="handleDepartSelect"
           v-model="form.departCity"
+          @blur="handleDepartBlur"
           class="el-autocomplete"
         ></el-autocomplete>
       </el-form-item>
@@ -31,6 +32,7 @@
           placeholder="请搜索到达城市"
           @select="handleDestSelect"
           v-model="form.destCity"
+          @blur="handleDestBlur"
           class="el-autocomplete"
         ></el-autocomplete>
       </el-form-item>
@@ -70,10 +72,23 @@ export default {
         destCity: "",
         destCode: "",
         departDate: ""
-      }
+      },
+      departData: [],
+      destData: []
     };
   },
   methods: {
+    // 出发城市输入框失去焦点时候触发
+    handleDepartBlur() {
+      this.form.departCity = this.departData[0] ? this.departData[0].value : "";
+      this.form.departCode = this.departData[0] ? this.departData[0].sort : "";
+    },
+    // 到达城市输入框失去焦点时候触发
+    handleDestBlur() {
+      this.form.destCity = this.destData[0] ? this.destData[0].value : "";
+      this.form.destCode = this.destData[0] ? this.destData[0].sort : "";
+    },
+
     // tab切换时触发
     handleSearchTab(index) {
       if (index === 1) {
@@ -105,10 +120,8 @@ export default {
           //把value属性添加到数组中
           newData.push(v);
         });
-
-        //默认选中第一个
-        this.form.departCity = newData[0].value;
-        this.form.departCode = newData[0].sort;
+        // 把转换后的数组赋值给data
+        this.departData = newData;
 
         //下拉列表显示
         cb(newData);
@@ -139,10 +152,9 @@ export default {
           newData.push(v);
         });
 
-        //默认选中第一个
-        this.form.destCity = newData[0].value;
-        this.form.destCode = newData[0].sort;
-
+        // 把转换后的数组赋值给data
+        this.destData = newData;
+        
         //下拉列表显示
         cb(newData);
       });
