@@ -56,7 +56,8 @@ export default {
           }).then(res => {
             console.log(res.data);
             this.$store.commit("user/setUserInfo", res.data);
-            this.$router.push('/')
+            //返回上一页
+            this.$router.back()
           });
         }
       });
