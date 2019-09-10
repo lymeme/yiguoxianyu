@@ -154,7 +154,7 @@ export default {
 
         // 把转换后的数组赋值给data
         this.destData = newData;
-        
+
         //下拉列表显示
         cb(newData);
       });
@@ -197,17 +197,24 @@ export default {
 
       //判断输入框不能为空
       if (!departCity) {
-        this.$alert("出发城市不能为空", "提示");
+        this.$alert("请输入出发城市", "提示");
         return;
       }
       if (!destCity) {
-        this.$alert("到达城市不能为空", "提示");
+        this.$alert("请输入到达城市", "提示");
         return;
       }
       if (!departDate) {
-        this.$alert("出发时间不能为空", "提示");
+        this.$alert("请输入出发时间", "提示");
         return;
       }
+
+      //把本地存储拿出来
+      const arr = JSON.parse(localStorage.getItem("airs")) || [];
+      arr.push(this.form);
+
+      //把搜索条件保存到本地
+      localStorage.setItem("airs", JSON.stringify(arr));
 
       // 跳转到机票页
       this.$router.push({
