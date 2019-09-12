@@ -4,10 +4,7 @@
       <!-- 左边导航栏 -->
       <el-col :span="7">
         <div class="left-nav">
-          <div class="citylist">
-            <span class="city">热门城市</span>
-            <span class="arrow">＞</span>
-          </div>
+          <PostNav />
 
           <p>推荐城市</p>
           <a href="#">
@@ -18,7 +15,7 @@
       <!-- 右边内容 -->
       <el-col :span="17">
         <div class="right-content">
-          aaaaa
+         <PostItem />
         </div>
       </el-col>
     </el-row>
@@ -26,21 +23,17 @@
 </template>
 
 <script>
+import PostNav from "@/components/post/postNav.vue"
+import PostItem from "@/components/post/postItem.vue"
 export default {
   data() {
     return {
-      dataList: []
     };
   },
-  mounted() {
-    this.$axios({
-      url: "/posts/cities"
-    }).then(res => {
-      console.log(res);
-      const dataList = res.data.data;
-      console.log(dataList);
-    });
-  }
+  components:{
+    PostNav,
+    PostItem
+  },
 };
 </script>
 
@@ -53,32 +46,13 @@ export default {
     width: 260px;
     p {
       padding: 10px 0;
+      font-size: 20px;
       border-bottom: 1px #ddd solid;
+      border-top: 1px #ddd solid;
     }
     img {
       padding-top: 10px;
       width: 260px;
-    }
-    .citylist {
-      display: flex;
-      justify-content: space-between;
-      height: 41px;
-      line-height: 41px;
-      padding-left: 20px;
-      padding-right: 10px;
-      border: 1px #ddd solid;
-      position: relative;
-      z-index: 2;
-      &:hover {
-        color: orange;
-        border-right-color: #fff
-      }
-      .city {
-        font-size: 14px;
-      }
-      .arrow {
-        font-size: 25px;
-      }
     }
   }
 

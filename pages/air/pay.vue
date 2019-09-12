@@ -3,7 +3,7 @@
     <div class="main">
       <div class="pay-title">
         支付总金额
-        <span class="pay-price">￥ {{$store.state.air.allPrice}}</span>
+        <span class="pay-price">￥ {{order.price}}</span>
       </div>
       <div class="pay-main">
         <h4>微信支付</h4>
@@ -26,28 +26,75 @@
  <script>
 import QRCode from "qrcode";
 export default {
-    mounted(){
-        setTimeout(() => {
-            //请求订单详情
-            this.$axios({
-                url:"/airorders/" + this.$route.query.id,
-                //给接口单独加上请求头
-                headers:{
-                      Authorization: `Bearer ${this.$store.state.user.userInfo.token}`
-                },               
-            }).then(res => {
+  data() {
+    return {
+      //订单详情
+      order: {},
+      //定时器的变量
+      timer: null
+    };
+  },
+  destroyed() {
+    //清楚定时器
+    clearInterval(this.timer);
+    this.timer = null;
+  },
+  methods: {
+    checkPay() {
+      //检查付款状态
+      this.$axios({
+        url: "/airorders/checkpay",
+        method: "POST",
+        data: {
+          id: this.$route.query.id,
+          nonce_str: this.order.price,
+          out_trade_no:this.order.orderNo
+        },
+        //给接口单独加上请求头
+        headers: {
+          Authorization: `Bearer ${this.$store.state.user.userInfo.token}`
+        }
+      }).then(res => {
+        const { statusTxt } = res.data;
+        if (statusTxt === "支付完成") {
+          //清楚定时器
+          clearInterval(this.timer);
+          this.timer = null;
 
-                //获取canvas节点元素
-                const canvas = document.getElementById("qrcode-stage");
-                //要生成二维码的连接
-                const {code_url} = res.data.payInfo;
-
-                QRCode.toCanvas(canvas,code_url,{
-                    width:300
-                })
-            })
-        },10)
+          //提示
+          this.$alert("支付成功","提示")
+        }
+      });
     }
+  },
+  mounted() {
+    setTimeout(() => {
+      //请求订单详情
+      this.$axios({
+        url: "/airorders/" + this.$route.query.id,
+        //给接口单独加上请求头
+        headers: {
+          Authorization: `Bearer ${this.$store.state.user.userInfo.token}`
+        }
+      }).then(res => {
+        //赋值到data
+        this.order = res.data;
+        //获取canvas节点元素
+        const canvas = document.getElementById("qrcode-stage");
+        //要生成二维码的连接
+        const { code_url } = res.data.payInfo;
+
+        QRCode.toCanvas(canvas, code_url, {
+          width: 300
+        });
+
+        //轮询
+        this.timer = setInterval(() => {
+          this.checkPay();
+        }, 3000);
+      });
+    }, 10);
+  }
 };
 </script>
 
