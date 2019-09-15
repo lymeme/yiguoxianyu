@@ -15,7 +15,7 @@
     <el-col>
       <div class="button">
         <span>推荐攻略</span>
-        <el-button type="primary" class="edit">
+        <el-button type="primary" class="edit" @click.native="$router.push('/post/create')">
           <i class="el-icon-edit"></i>&nbsp; 写游记
         </el-button>
       </div>
@@ -24,7 +24,9 @@
 </template>
 
 <script>
-export default {};
+export default {
+
+};
 </script>
 
 <style lang="less" scoped>
