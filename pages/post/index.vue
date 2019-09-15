@@ -48,7 +48,6 @@ export default {
       padding: 10px 0;
       font-size: 20px;
       border-bottom: 1px #ddd solid;
-      border-top: 1px #ddd solid;
     }
     img {
       padding-top: 10px;

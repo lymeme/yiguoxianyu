@@ -5,7 +5,7 @@ export default {
   ** Headers of the page
   */
   head: {
-    title: "龙江旅游网 · (国内最大旅游网站)", // 修改title
+    title: "黑马最帅旅游网站", // 修改title
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -52,7 +52,7 @@ export default {
   ** See https://axios.nuxtjs.org/options
   */
   axios: {
-    baseURL: "http://127.0.0.1:1337" // 新增axios默认请求路径 
+    baseURL: "http://157.122.54.189:9095" // 新增axios默认请求路径 
   },
   /*
   ** Build configuration
