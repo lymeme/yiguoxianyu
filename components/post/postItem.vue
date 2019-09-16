@@ -34,13 +34,16 @@
 
     <!-- 文章展示 -->
     <el-col v-for="(item,index) in postsData" :key="index">
+        <!-- 标题 -->
       <div class="article">
         <nuxt-link :to="`/post/detail?id=${item.id}`">
           <span class="title">{{item.title}}</span>
         </nuxt-link>
-        <nuxt-link to>
+        <!-- 摘要 -->
+        <nuxt-link :to="`/post/detail?id=${item.id}`">
           <p>{{item.summary}}</p>
         </nuxt-link>
+        <!-- 图片 -->
         <nuxt-link
           :to="`/post/detail?id=${item.id}`"
           v-for="(item1,index) in item.images"
@@ -48,12 +51,13 @@
         >
           <img :src="item1" alt />
         </nuxt-link>
+        <!-- 信息 -->
         <div class="little-word">
           <i class="el-icon-location-outline"></i>
           <span>{{item.cityName}}&nbsp;&nbsp;by</span>&nbsp;&nbsp;
           <nuxt-link to>
             <img :src="`${$axios.defaults.baseURL}`+item.account.defaultAvatar" alt />
-            <span class="username">{{$store.state.user.userInfo.user.nickname}}</span>&nbsp;&nbsp;
+            <span class="username">{{item.account.nickname}}</span>&nbsp;&nbsp;
           </nuxt-link>
           <i class="el-icon-view"></i>
           <span>{{item.watch}}</span>
@@ -107,7 +111,7 @@ export default {
     searchCity() {
       console.log(this.searchCityName);
       this.$router.push({
-        path: `/post?city=${this.searchCityName}`
+        path: `/post?city=${this.searchCityName}` 
       });
     },
     init() {

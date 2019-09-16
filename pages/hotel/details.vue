@@ -13,7 +13,7 @@
     <el-row class="hotelName">
       <span class="hname">{{infoData.name}}</span>
       <span>
-        <el-rate v-if="infoData.hotellevel" v-model="infoData.hotellevel.level" disabled text-color="#ff9900" disabled-void-color="#fff" ></el-rate>
+        <el-rate v-if="infoData.hotellevel" v-model="infoData.hotellevel.level" disabled text-color="#ff9900" disabled-void-color="#fff" style="display:inline-block"></el-rate>
       </span> 
       <p>{{infoData.alias}}</p>
       <div>

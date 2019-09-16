@@ -58,7 +58,6 @@
                   <p @click="changeCommenter(parent.responder,index)">{{parent.content}}</p>
                 </div>
               </div>
-              
             </div>
           </div>
         </div>
@@ -83,7 +82,7 @@
               </div>
             </div>
           </div>
-        </div> -->
+        </div>-->
 
         <el-button type="primary" size="mini" class="el-button" @click="addComment">提交</el-button>
       </div>
@@ -92,11 +91,11 @@
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :current-page="currentPage4"
+        :current-page="pageIndex"
         :page-sizes="[5, 10, 15, 20]"
         :page-size="pageSize"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="100"
+        :total="total"
       ></el-pagination>
     </div>
   </div>
@@ -107,6 +106,7 @@ export default {
   props: ["type", "name"],
   data() {
     return {
+      total: 0,
       pageSize: 0,
       pageIndex: 2,
       commentText: "",
@@ -125,10 +125,11 @@ export default {
       this.dialogVisible = true;
     },
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
+      // console.log(`每页 ${val} 条`);
+
     },
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
+      // console.log(`当前页: ${val}`);
     },
     addComment: function() {
       this.$emit("submit", this.commentText);
@@ -148,9 +149,10 @@ export default {
         _limit: this.pageIndex
       }
     }).then(res => {
-      //   console.log(res);
+      console.log(res);
       this.comment = res.data.data;
-      console.log(this.comment);
+      // console.log(this.comment);
+      this.total = res.data.total;
     });
   },
   filters: {

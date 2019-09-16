@@ -346,21 +346,6 @@ export default {
     };
   },
   mounted() {
-    // 获取城市数据
-    this.$router.push({ path: "/hotel?city=74" });
-    this.$axios({
-      url: "/hotels",
-      params: {
-        city: this.$route.query.city,
-        _start: this.pageIndex * this.pageSize
-      }
-    }).then(res => {
-      console.log(res.data, 1111);
-      this.cityList = res.data.data;
-      this.total = res.data.total;
-      // console.log(res.data.data,123321)
-      // this.level = res.data.data.hotellevel.level
-    });
     // 地图
     window.onLoad = function() {
       const map = new AMap.Map("container", {
@@ -389,7 +374,21 @@ export default {
     jsapi.charset = "utf-8";
     jsapi.src = url;
     document.head.appendChild(jsapi);
-    
+    // 获取城市数据
+    this.$router.push({ path: "/hotel?city=74" });
+    this.$axios({
+      url: "/hotels",
+      params: {
+        city: this.$route.query.city,
+        _start: this.pageIndex * this.pageSize
+      }
+    }).then(res => {
+      // console.log(res.data, 1111);
+      this.cityList = res.data.data;
+      this.total = res.data.total;
+      // console.log(res.data.data,123321)
+      // this.level = res.data.data.hotellevel.level
+    });
     // 酒店选项
     this.$axios({
       url: "/hotels/options"
@@ -422,7 +421,7 @@ export default {
     },
     // 页码改变时
     handleSizeChange(val) {
-      console.log(val, 134);
+      // console.log(val, 134);
       this.pageIndex = val;
       this.$router.push({ path: `/hotel?city=74&_start=${val}` });
     },
