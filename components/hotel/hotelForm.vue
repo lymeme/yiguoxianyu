@@ -108,6 +108,7 @@
             <el-slider
               :max="4000"
               v-model="checkPrice"
+              @change="changePrice"
               :format-tooltip="formatTooltip"
               style="padding-right:26px"
             ></el-slider>
@@ -236,9 +237,14 @@
           <div class="hotel_name">
             <span>{{item.alias}}</span>
             <span>
-              <i class="iconfont iconhuangguan"></i>
-              <i class="iconfont iconhuangguan"></i>
-              <i class="iconfont iconhuangguan"></i>
+              <el-rate
+                style="display:inline-block"
+                v-if="item.hotellevel"
+                v-model="item.hotellevel.level"
+                disabled-void-color="#fff"
+                disabled
+                text-color="#ff9900"
+              ></el-rate>
             </span>
             <span>{{item.hoteltype.name}}</span>
           </div>
@@ -292,10 +298,10 @@
       class="fenye"
       :prev-text="'上一页'"
       :next-text="'下一页'"
-      @size-change="handleSizeChange"
+      @current-change="handleSizeChange"
       :current-page="pageIndex"
       :page-size="pageSize"
-      layout=" prev, pager, next"
+      layout="total, prev, pager, next"
       :total="total"
     ></el-pagination>
   </div>
@@ -304,6 +310,8 @@
 export default {
   data() {
     return {
+      level: 3,
+      price_in: 0,
       total: 0,
       // 筛选列表
       hotelsData: {
@@ -338,16 +346,42 @@ export default {
     };
   },
   mounted() {
+    // 获取城市数据
+    this.$router.push({ path: "/hotel?city=74" });
+    this.$axios({
+      url: "/hotels",
+      params: {
+        city: this.$route.query.city,
+        _start: this.pageIndex * this.pageSize
+      }
+    }).then(res => {
+      console.log(res.data, 1111);
+      this.cityList = res.data.data;
+      this.total = res.data.total;
+      // console.log(res.data.data,123321)
+      // this.level = res.data.data.hotellevel.level
+    });
     // 地图
     window.onLoad = function() {
-      const map = new AMap.Map("container");
+      const map = new AMap.Map("container", {
+        zoom: 11, //级别
+        center: [118.8718107, 31.32846821], //中心点坐标
+        viewMode: "3D" //使用3D视图
+      });
+      let markerList = [];
+      for (let i = 0; i < this.cityList.length; i++) {
+        let location = [];
+        location.push(cityList[i].location.longitude);
+        location.push(cityList[i].location.latitude);
+        var marker = new AMap.Marker({
+          position: location,
+          title: `${cityList[i].name}`
+        }); // 经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9] title: '北京' });
+        markerList.push(marker)
+      }
       // console.log(11)
-      var marker = new AMap.Marker({
-        position: new AMap.LngLat(116.39, 39.9),
-        title: "beij"
-      }); // 经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9] title: '北京' });
 
-      map.add([marker]);
+      map.add([markerList]);
     };
     const url =
       "https://webapi.amap.com/maps?v=1.4.15&key=f9a05005eca16632b6fbe97d15d9ce1e&callback=onLoad";
@@ -355,19 +389,7 @@ export default {
     jsapi.charset = "utf-8";
     jsapi.src = url;
     document.head.appendChild(jsapi);
-    // 获取城市数据
-    this.$router.push({ path: "/hotel?city=74" });
-    this.$axios({
-      url: "/hotels",
-      params:{
-        city:this.$route.query.city,
-        _start:this.pageIndex * this.pageSize
-      }
-    }).then(res => {
-      console.log(res.data, 1111);
-      this.cityList = res.data.data;
-      this.total = res.data.total;
-    });
+    
     // 酒店选项
     this.$axios({
       url: "/hotels/options"
@@ -383,22 +405,26 @@ export default {
       this.$axios({
         url: "/hotels",
         params: {
-          _limit: this.pageSize,
-          _start: (this.pageIndex - 1) * this.pageSize,
           ...this.$route.query
         }
       }).then(res => {
         // console.log(res, 111);
+        this.total = res.data.total;
         this.cityList = res.data.data;
       });
     }
   },
   methods: {
+    // 筛选价格
+    changePrice() {
+      console.log(111);
+      this.$router.push({ path: `/hotel?city=74&price_lt=${this.price_in}` });
+    },
     // 页码改变时
     handleSizeChange(val) {
       console.log(val, 134);
-      this.pageSize = val;
-      this.$router.push({ path: `/hotel?city=74&page=${this.pageIndex}` });
+      this.pageIndex = val;
+      this.$router.push({ path: `/hotel?city=74&_start=${val}` });
     },
 
     // 目标城市输入框获得焦点时触发
@@ -447,8 +473,8 @@ export default {
     },
     // 价格选择
     formatTooltip(obj) {
-      this.checkPrice = obj;
-      // console.log(obj)
+      this.price_in = obj;
+      console.log(obj);
       // let str = this.getUrl()
       // this.$router.push({
       //   path:`/hotel?${str}&price_lt=${this.checkPrice}`
